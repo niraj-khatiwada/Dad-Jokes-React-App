@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import './AllJokes.css'
 import Joke from './Joke'
 
+import { v4 as uuid } from 'uuid'
 import axios from 'axios'
 
 class AllJokes extends Component {
@@ -52,15 +53,12 @@ class AllJokes extends Component {
         .then((res) => {
           if (!this.noDuplicateJokes.has(res.data.joke)) {
             jokesArray.push({
-              id: res.data.id,
+              id: uuid(),
               jokeText: res.data.joke,
               totalVotes: 0,
               emoji: '🙂',
               votesBorderColor: '#fcf7bb',
             })
-          } else {
-            console.log('Duplicate Found')
-            console.log(res.data.joke)
           }
         })
         .catch((err) => {
@@ -131,7 +129,7 @@ class AllJokes extends Component {
     let jokesArrayExtract = this.state.joke.map((jokeData) => {
       return (
         <Joke
-          key={jokeData.id}
+          key={uuid()}
           joke={jokeData.jokeText}
           totalVotes={jokeData.totalVotes}
           handleUpvoteClick={this.VoteClick.bind(this, jokeData.id, 1)}
