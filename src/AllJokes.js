@@ -14,6 +14,11 @@ class AllJokes extends Component {
           : [],
       loading: false,
     }
+    this.noDuplicateJokes = new Set(
+      this.state.joke.map((value) => {
+        return value.jokeText
+      })
+    )
     this.handleNewJokeClick = this.handleNewJokeClick.bind(this)
   }
   static defaultProps = {
@@ -45,21 +50,26 @@ class AllJokes extends Component {
           },
         })
         .then((res) => {
-          jokesArray.push({
-            id: res.data.id,
-            jokeText: res.data.joke,
-            totalVotes: 0,
-            emoji: '🙂',
-            votesBorderColor: '#fcf7bb',
-          })
+          if (!this.noDuplicateJokes.has(res.data.joke)) {
+            jokesArray.push({
+              id: res.data.id,
+              jokeText: res.data.joke,
+              totalVotes: 0,
+              emoji: '🙂',
+              votesBorderColor: '#fcf7bb',
+            })
+          } else {
+            console.log('Duplicate Found')
+            console.log(res.data.joke)
+          }
+        })
+        .catch((err) => {
+          alert('Something is wrong with server', err)
         })
     }
     this.setState((preState) => {
-      let filterArray = jokesArray.filter((value) => {
-        return value.id !== preState.joke.id
-      })
-      window.localStorage.setItem('joke', JSON.stringify(filterArray))
-      return { joke: [...preState.joke, ...filterArray], loading: false }
+      window.localStorage.setItem('joke', JSON.stringify(jokesArray))
+      return { joke: [...preState.joke, ...jokesArray], loading: false }
     })
   }
 

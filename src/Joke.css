@@ -34,7 +34,7 @@
 }
 
 .true {
-  background-color: green;
+  background-color: orange;
   transition: all 1s linear;
   animation: loadingAnimation 4s 1 ease-in-out;
 }
@@ -70,4 +70,9 @@
     border-bottom: 3px solid teal;
     border-left: 3px solid skyblue;
   }
+}
+
+.newjokes-btn {
+  outline-style: none;
+  color: black;
 }
