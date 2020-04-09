@@ -9,9 +9,7 @@ class AllJokes extends Component {
     super(props)
     this.state = {
       joke: [],
-      emoji: '🙂',
     }
-    this.VoteClick = this.VoteClick.bind(this)
   }
   static defaultProps = {
     listNum: 10,
@@ -21,6 +19,15 @@ class AllJokes extends Component {
       extraFunny: '😆',
       stopIt: '😂',
       iAmGonnaCry: '🤣',
+      sad: '☹️',
+    },
+    votesBorderColor: {
+      normal: '#fcf7bb',
+      funny: '#deff8b',
+      extraFunny: '#c0ffb3',
+      stopIt: '#7fcd91',
+      iAmGonnaCry: '#21bf73',
+      sad: '#e6a157',
     },
   }
   async componentDidMount() {
@@ -37,6 +44,8 @@ class AllJokes extends Component {
             id: res.data.id,
             jokeText: res.data.joke,
             totalVotes: 0,
+            emoji: '🙂',
+            votesBorderColor: '#fcf7bb',
           })
         })
     }
@@ -45,10 +54,40 @@ class AllJokes extends Component {
 
   VoteClick(jokeID, delta) {
     this.setState((preState) => {
+      let emo
+      let borderColor
+      let newState
       return {
         joke: preState.joke.map((j) => {
           if (j.id === jokeID) {
-            return { ...j, totalVotes: j.totalVotes + delta }
+            newState = j.totalVotes + delta
+            if (newState >= 2 && newState < 4) {
+              emo = this.props.emojis.funny
+              borderColor = this.props.votesBorderColor.funny
+            } else if (newState >= 4 && newState < 6) {
+              emo = this.props.emojis.extraFunny
+              borderColor = this.props.votesBorderColor.extraFunny
+            } else if (newState >= 6 && newState < 8) {
+              emo = this.props.emojis.stopIt
+              borderColor = this.props.votesBorderColor.stopIt
+            } else if (newState >= 8) {
+              emo = this.props.emojis.iAmGonnaCry
+              borderColor = this.props.votesBorderColor.iAmGonnaCry
+            } else if (newState < 0) {
+              emo = this.props.emojis.sad
+              borderColor = this.props.votesBorderColor.sad
+            } else {
+              emo = this.props.emojis.normal
+              borderColor = this.props.votesBorderColor.normal
+            }
+            newState = newState = {
+              ...j,
+              totalVotes: newState,
+              emoji: emo,
+              votesBorderColor: borderColor,
+            }
+
+            return newState
           } else {
             return j
           }
@@ -66,7 +105,8 @@ class AllJokes extends Component {
           totalVotes={jokeData.totalVotes}
           handleUpvoteClick={this.VoteClick.bind(this, jokeData.id, 1)}
           handleDownvoteClick={this.VoteClick.bind(this, jokeData.id, -1)}
-          emoji={this.state.emoji}
+          emoji={jokeData.emoji}
+          votesBorderColor={jokeData.votesBorderColor}
         />
       )
     })
@@ -87,3 +127,5 @@ class AllJokes extends Component {
 }
 
 export default AllJokes
+
+//this.mapEmojis.bind(this, jokeData.totalVotes)

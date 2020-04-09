@@ -20,7 +20,14 @@ class Joke extends Component {
               className="fas fa-arrow-up upVote"
               onClick={this.handleUpvote}
             ></i>
-            <button className="voteCount">{this.props.totalVotes}</button>
+            <button
+              className="voteCount"
+              style={{
+                border: `3px solid ${this.props.votesBorderColor}`,
+              }}
+            >
+              {this.props.totalVotes}
+            </button>
             <i
               className="fas fa-arrow-down downVote"
               onClick={this.handleDownvote}
