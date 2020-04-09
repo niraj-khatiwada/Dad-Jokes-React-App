@@ -8,8 +8,13 @@ class AllJokes extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      joke: [],
+      joke:
+        window.localStorage.getItem('joke') !== null
+          ? JSON.parse(window.localStorage.getItem('joke'))
+          : [],
+      loading: false,
     }
+    this.handleNewJokeClick = this.handleNewJokeClick.bind(this)
   }
   static defaultProps = {
     listNum: 10,
@@ -49,16 +54,22 @@ class AllJokes extends Component {
           })
         })
     }
-    this.setState({ joke: jokesArray })
+    this.setState((preState) => {
+      let filterArray = jokesArray.filter((value) => {
+        return value.id !== preState.joke.id
+      })
+      window.localStorage.setItem('joke', JSON.stringify(filterArray))
+      return { joke: [...preState.joke, ...filterArray], loading: false }
+    })
   }
 
   VoteClick(jokeID, delta) {
-    this.setState((preState) => {
-      let emo
-      let borderColor
-      let newState
-      return {
-        joke: preState.joke.map((j) => {
+    this.setState(
+      (preState) => {
+        let emo
+        let borderColor
+        let newState
+        let unsortedArray = preState.joke.map((j) => {
           if (j.id === jokeID) {
             newState = j.totalVotes + delta
             if (newState >= 2 && newState < 4) {
@@ -91,11 +102,21 @@ class AllJokes extends Component {
           } else {
             return j
           }
-        }),
+        })
+        let sortedArray = unsortedArray.sort((a, b) => {
+          return b.totalVotes - a.totalVotes
+        })
+        window.localStorage.setItem('joke', JSON.stringify(sortedArray))
+        return { joke: sortedArray }
+      },
+      () => {
+        window.localStorage.setItem('joke', JSON.stringify(this.state.joke))
       }
-    })
+    )
   }
-
+  handleNewJokeClick() {
+    this.setState({ loading: true }, () => this.componentDidMount())
+  }
   render() {
     let jokesArrayExtract = this.state.joke.map((jokeData) => {
       return (
@@ -110,6 +131,7 @@ class AllJokes extends Component {
         />
       )
     })
+
     return (
       <div className="AllJokes">
         <div className="Alljokes-grid">
@@ -117,7 +139,12 @@ class AllJokes extends Component {
             <h1>Dad Jokes</h1>
           </div>
           <div className="btn">
-            <button className="newjokes-btn">New Jokes</button>
+            <button
+              className={`newjokes-btn ${this.state.loading}`}
+              onClick={this.handleNewJokeClick}
+            >
+              {this.state.loading === true ? 'Loading...' : 'New Jokes'}
+            </button>
           </div>
         </div>
         <div className="JokesList">{jokesArrayExtract}</div>
@@ -127,5 +154,3 @@ class AllJokes extends Component {
 }
 
 export default AllJokes
-
-//this.mapEmojis.bind(this, jokeData.totalVotes)

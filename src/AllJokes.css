@@ -18,6 +18,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
 }
 
 .title h1 {
@@ -37,4 +38,10 @@
   font-size: medium;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande',
     'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.JokesList {
+  height: 70vh;
+  overflow-y: scroll;
+  scroll-behavior: smooth;
 }

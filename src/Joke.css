@@ -20,6 +20,7 @@
 .upVote,
 .downVote {
   transform: scale(1.5);
+  padding: 0 0.2rem;
 }
 
 .emoji {
@@ -30,4 +31,43 @@
 
 .joke {
   text-align: left;
+}
+
+.true {
+  background-color: green;
+  transition: all 1s linear;
+  animation: loadingAnimation 4s 1 ease-in-out;
+}
+
+@keyframes loadingAnimation {
+  0% {
+    border-top: 3px solid red;
+    border-right: 3px solid palegreen;
+    border-bottom: 3px solid teal;
+    border-left: 3px solid skyblue;
+  }
+  25% {
+    border-right: 3px solid red;
+    border-bottom: 3px solid palegreen;
+    border-left: 3px solid teal;
+    border-top: 3px solid skyblue;
+  }
+  50% {
+    border-bottom: 3px solid red;
+    border-left: 3px solid palegreen;
+    border-top: 3px solid teal;
+    border-right: 3px solid skyblue;
+  }
+  75% {
+    border-left: 3px solid red;
+    border-top: 3px solid palegreen;
+    border-right: 3px solid teal;
+    border-bottom: 3px solid skyblue;
+  }
+  100% {
+    border-top: 3px solid red;
+    border-right: 3px solid palegreen;
+    border-bottom: 3px solid teal;
+    border-left: 3px solid skyblue;
+  }
 }
