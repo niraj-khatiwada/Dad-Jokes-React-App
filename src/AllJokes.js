@@ -99,23 +99,20 @@ class AllJokes extends Component {
               emo = this.props.emojis.normal
               borderColor = this.props.votesBorderColor.normal
             }
-            newState = newState = {
+
+            return {
               ...j,
               totalVotes: newState,
               emoji: emo,
               votesBorderColor: borderColor,
             }
-
-            return newState
           } else {
             return j
           }
         })
-        let sortedArray = unsortedArray.sort((a, b) => {
-          return b.totalVotes - a.totalVotes
-        })
-        window.localStorage.setItem('joke', JSON.stringify(sortedArray))
-        return { joke: sortedArray }
+
+        window.localStorage.setItem('joke', JSON.stringify(unsortedArray))
+        return { joke: unsortedArray }
       },
       () => {
         window.localStorage.setItem('joke', JSON.stringify(this.state.joke))
@@ -139,25 +136,28 @@ class AllJokes extends Component {
         />
       )
     })
-
-    return (
-      <div className="AllJokes">
-        <div className="Alljokes-grid">
-          <div className="title">
-            <h1>Dad Jokes</h1>
+    if (this.state.joke.length !== 0) {
+      return (
+        <div className="AllJokes">
+          <div className="Alljokes-grid">
+            <div className="title">
+              <h1>Dad Jokes</h1>
+            </div>
+            <div className="btn">
+              <button
+                className={`newjokes-btn ${this.state.loading}`}
+                onClick={this.handleNewJokeClick}
+              >
+                {this.state.loading === true ? 'Loading...' : 'New Jokes'}
+              </button>
+            </div>
           </div>
-          <div className="btn">
-            <button
-              className={`newjokes-btn ${this.state.loading}`}
-              onClick={this.handleNewJokeClick}
-            >
-              {this.state.loading === true ? 'Loading...' : 'New Jokes'}
-            </button>
-          </div>
+          <div className="JokesList">{jokesArrayExtract}</div>
         </div>
-        <div className="JokesList">{jokesArrayExtract}</div>
-      </div>
-    )
+      )
+    } else {
+      return <div className="initialLoading"></div>
+    }
   }
 }
 
